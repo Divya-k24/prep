@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoho 10-Day Programming Prep Planner</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                    <span>Zoho Prep</span>
+                </div>
+                <span class="badge-version">Java Edition</span>
+            </div>
+
+            <!-- Global Progress Tracker -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span>Overall Progress</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="stats-mini">
+                    <span><strong id="solved-count">0</strong>/94 Unique Solved</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="nav-menu">
+                <div class="nav-label">Core Hub</div>
+                <button class="nav-item active" onclick="switchTab('dashboard')">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                </button>
+                <button class="nav-item" onclick="switchTab('templates')">
+                    <i class="fa-solid fa-code"></i> Java Templates
+                </button>
+                <button class="nav-item" onclick="switchTab('top20')">
+                    <i class="fa-solid fa-star"></i> Top 20 Must-Solve
+                </button>
+
+                <div class="nav-label">10-Day Plan</div>
+                <div class="days-list" id="days-nav-list">
+                    <!-- Day navigation links will be dynamically populated -->
+                </div>
+            </nav>
+
+            <!-- Quick Actions -->
+            <div class="sidebar-footer">
+                <button class="btn btn-random-global" onclick="triggerRandomChallenge(null)">
+                    <i class="fa-solid fa-shuffle"></i> Random Test (Any Day)
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="top-bar-actions">
+                    <button class="btn btn-random-day" id="day-random-btn" style="display: none;" onclick="triggerActiveDayRandom()">
+                        <i class="fa-solid fa-dice"></i> Random Day Test
+                    </button>
+                    <div class="theme-info">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Strict 10-Day Planner</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-body" id="content-area">
+                <!-- Content gets loaded dynamically here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Random Challenge Modal -->
+    <div class="modal-backdrop" id="challenge-modal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-tag">
+                    <i class="fa-solid fa-circle-nodes"></i> <span id="modal-pattern-tag">Pattern</span>
+                </div>
+                <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <h2 id="modal-problem-name">Problem Title</h2>
+                <div class="modal-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-label">Original No.</span>
+                        <span class="meta-val" id="modal-orig-no">#12</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Difficulty</span>
+                        <span class="meta-val" id="modal-difficulty">Medium</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Target Time</span>
+                        <span class="meta-val" id="modal-target-time">25 mins</span>
+                    </div>
+                </div>
+
+                <div class="gfg-link-container">
+                    <a href="#" id="modal-problem-url" target="_blank" class="btn btn-gfg-link">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Practice Link
+                    </a>
+                </div>
+
+                <!-- Timer Section -->
+                <div class="timer-container">
+                    <div class="timer-display" id="timer-display">00:00</div>
+                    <div class="timer-controls">
+                        <button class="btn btn-timer" id="timer-toggle-btn" onclick="toggleTimer()">
+                            <i class="fa-solid fa-play"></i> Start Timer
+                        </button>
+                        <button class="btn btn-timer-reset" onclick="resetTimer()">
+                            <i class="fa-solid fa-rotate-left"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Accordion Hint -->
+                <div class="hint-accordion">
+                    <button class="hint-header" onclick="toggleHint()">
+                        <span><i class="fa-solid fa-lightbulb"></i> Technique to try FIRST</span>
+                        <i class="fa-solid fa-chevron-down" id="hint-chevron"></i>
+                    </button>
+                    <div class="hint-content" id="hint-content" style="display: none;">
+                        <p id="modal-technique-text">Technique details go here.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Skip</button>
+                <button class="btn btn-primary" id="modal-complete-btn" onclick="markModalProblemComplete()">
+                    <i class="fa-solid fa-check"></i> Mark as Solved
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
